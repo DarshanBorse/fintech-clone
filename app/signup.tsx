@@ -16,7 +16,7 @@ const Page = () => {
     let fullPhoneNumber = `${countryCode}${phoneNumber}`;
 
     if (process.env.NODE_ENV == "development") {
-      fullPhoneNumber = `+15555550101`;
+      fullPhoneNumber = `+15555550102`;
     }
 
     try {
