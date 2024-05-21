@@ -56,10 +56,11 @@ const Layout = () => {
       <Tabs.Screen
         name="crypto"
         options={{
-          title: "Crypto",
           tabBarIcon: ({ size, color }) => {
-            return <FontAwesome name="bitcoin" size={size} color={color} />;
+            return <FontAwesome name="registered" size={size} color={color} />;
           },
+          header: () => <CustomHeader />,
+          headerTransparent: true,
         }}
       />
       <Tabs.Screen
