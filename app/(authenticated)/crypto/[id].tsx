@@ -6,6 +6,9 @@ import { defaultStyles } from "@/constants/Styles";
 import Colors from "@/constants/Colors";
 import { useQuery } from "@tanstack/react-query";
 import { Ionicons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import moment from "moment";
 
 const categories = ["Overview", "News", "Orders", "Transactions"];
 
@@ -19,6 +22,13 @@ const Page = () => {
     queryFn: async () => {
       const info = await fetch(`/api/info?ids=${id}`).then((res) => res.json());
       return info[+id!];
+    },
+  });
+
+  const { data: tickers } = useQuery({
+    queryKey: ["tickers"],
+    queryFn: async () => {
+      return await fetch(`/api/tickers`).then((res) => res.json());
     },
   });
 
@@ -90,8 +100,38 @@ const Page = () => {
         )}
         renderItem={({ item }) => (
           <>
-            <View style={{ height: 500, backgroundColor: "green" }}></View>
-            <View style={[defaultStyles.block, { marginTop: 20 }]}>
+            <View style={{ height: 400, marginHorizontal: "auto" }}>
+              {tickers && (
+                <LineChart
+                  data={{
+                    labels:
+                      tickers?.map(
+                        ({ timestamp }) => `${moment(timestamp).format("DD")}/${moment(timestamp).format("MM")}`
+                      ) || [],
+                    datasets: [
+                      {
+                        data: tickers?.map(({ price }) => price?.toFixed(2) / 12) || [],
+                      },
+                    ],
+                  }}
+                  width={Dimensions.get("window").width - 30}
+                  height={400}
+                  chartConfig={{
+                    backgroundColor: "#ffffff",
+                    backgroundGradientFrom: "#ffffff",
+                    backgroundGradientTo: "#ffffff",
+                    decimalPlaces: 2,
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  }}
+                  bezier
+                  style={{
+                    borderRadius: 16,
+                  }}
+                />
+              )}
+            </View>
+            <View style={[defaultStyles.block, { marginTop: 20, marginBottom: 20 }]}>
               <Text style={styles.subTitle}>Overview</Text>
               <Text style={{ color: Colors.gray }}>
                 Bitcoin is a decentralized digital currency, without a central bank or single administrator, that can be sent
@@ -111,7 +151,6 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 20,
     color: Colors.gray,
   },
   categoryText: {

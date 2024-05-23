@@ -1,4 +1,5 @@
 import Colors from "@/constants/Colors";
+import { UserInActivityProvider } from "@/context/UserInactivity";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -184,6 +185,7 @@ const InitialLayout = () => {
           },
         }}
       />
+      <Stack.Screen name="(authenticated)/(modals)/lock" options={{ headerShown: false, animation: "none" }} />
     </Stack>
   );
 };
@@ -192,10 +194,12 @@ const RootLayoutNav = () => {
   return (
     <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar style="light" />
-          <InitialLayout />
-        </GestureHandlerRootView>
+        <UserInActivityProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <StatusBar style="light" />
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </UserInActivityProvider>
       </QueryClientProvider>
     </ClerkProvider>
   );
