@@ -10,7 +10,7 @@ import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import moment from "moment";
 
-const categories = ["Overview", "News", "Orders", "Transactions"];
+const categories = ["Overview"];
 
 const Page = () => {
   const { id } = useLocalSearchParams();
@@ -106,11 +106,12 @@ const Page = () => {
                   data={{
                     labels:
                       tickers?.map(
-                        ({ timestamp }) => `${moment(timestamp).format("DD")}/${moment(timestamp).format("MM")}`
+                        ({ timestamp }: { timestamp: string }) =>
+                          `${moment(timestamp).format("DD")}/${moment(timestamp).format("MM")}`
                       ) || [],
                     datasets: [
                       {
-                        data: tickers?.map(({ price }) => price?.toFixed(2) / 12) || [],
+                        data: tickers?.map(({ price }: { price: any }) => price?.toFixed(2) / 12) || [],
                       },
                     ],
                   }}

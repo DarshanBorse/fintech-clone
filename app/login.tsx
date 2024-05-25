@@ -22,15 +22,18 @@ const Page = () => {
   const router = useRouter();
 
   const onSignIn = async (type: SignInType) => {
-    if (type == SignInType.Phone) {
+    if (type === SignInType.Phone) {
       try {
-        const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+        let fullPhoneNumber = `${countryCode}${phoneNumber}`;
+        if (process.env.NODE_ENV == "development") {
+          fullPhoneNumber = `+15555550101`;
+        }
+
         const { supportedFirstFactors } = await signIn!.create({
           identifier: fullPhoneNumber,
         });
-
         const firstPhoneFactor: any = supportedFirstFactors.find((factor: any) => {
-          return factor.stratery == "phone_code";
+          return factor.strategy === "phone_code";
         });
 
         const { phoneNumberId } = firstPhoneFactor;
@@ -40,12 +43,15 @@ const Page = () => {
           phoneNumberId,
         });
 
-        router.push({ pathname: "/verify/[phone]", params: { phone: phoneNumber, signin: "true" } });
-      } catch (error) {
-        console.log("🚀 ~ file: login.tsx:28 ~ onSignIn ~ error:", error);
-        if (isClerkAPIResponseError(error)) {
-          if (error.errors[0].code == "form_identifier_not_found") {
-            Alert.alert("Error", error.errors[0].message);
+        router.push({
+          pathname: "/verify/[phone]",
+          params: { phone: fullPhoneNumber, signin: "true" },
+        });
+      } catch (err) {
+        console.log("error", JSON.stringify(err, null, 2));
+        if (isClerkAPIResponseError(err)) {
+          if (err.errors[0].code === "form_identifier_not_found") {
+            Alert.alert("Error", err.errors[0].message);
           }
         }
       }

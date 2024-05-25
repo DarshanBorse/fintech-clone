@@ -35,24 +35,7 @@ const Layout = () => {
           headerTransparent: true,
         }}
       />
-      <Tabs.Screen
-        name="invest"
-        options={{
-          title: "Invest",
-          tabBarIcon: ({ size, color }) => {
-            return <FontAwesome name="line-chart" size={size} color={color} />;
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="transfers"
-        options={{
-          title: "Transfers",
-          tabBarIcon: ({ size, color }) => {
-            return <FontAwesome name="exchange" size={size} color={color} />;
-          },
-        }}
-      />
+
       <Tabs.Screen
         name="crypto"
         options={{
@@ -61,15 +44,6 @@ const Layout = () => {
           },
           header: () => <CustomHeader />,
           headerTransparent: true,
-        }}
-      />
-      <Tabs.Screen
-        name="lifestyle"
-        options={{
-          title: "LifeStyle",
-          tabBarIcon: ({ size, color }) => {
-            return <FontAwesome name="th" size={size} color={color} />;
-          },
         }}
       />
     </Tabs>

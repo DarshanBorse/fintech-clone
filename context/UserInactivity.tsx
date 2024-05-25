@@ -13,6 +13,7 @@ export const UserInActivityProvider = ({ children }: any) => {
   const router = useRouter();
 
   const { isSignedIn } = useAuth();
+  console.log("🚀 ~ file: UserInactivity.tsx:16 ~ UserInActivityProvider ~ isSignedIn:", isSignedIn);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", handleAppStateChange);
@@ -27,8 +28,9 @@ export const UserInActivityProvider = ({ children }: any) => {
     if (nextAppState == "background") {
       recordStartTime();
     } else if (nextAppState == "active") {
-      console.log("We are back", storage.getNumber("startTime"));
+      console.log("We are back", Date.now() - (storage.getNumber("startTime") || 0));
 
+      console.log("🚀 ~ file: UserInactivity.tsx:34 ~ handleAppStateChange ~ isSignedIn:", isSignedIn);
       const elapsed = Date.now() - (storage.getNumber("startTime") || 0);
       if (elapsed > 3000 && isSignedIn) {
         router.replace("/(authenticated)/(modals)/lock");
